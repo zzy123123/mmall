@@ -24,6 +24,41 @@
     from mmall_user
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="checkUserName" resultType="int" parameterType="String">
+    select count(1) from mmall_user
+    where username=#{username}
+  </select>
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List" />
+    from mmall_user
+    where username=#{username}
+    and password=#{password}
+  </select>
+  <select id="checkEmail" resultType="int" parameterType="String">
+    select count(1) from mmall_user
+    where email=#{email}
+  </select>
+  <select id="selectQuestionByUsername" resultType="java.lang.String" parameterType="String">
+    select question from mmall_user
+    where username=#{username}
+  </select>
+  <select id="checkAnswer" resultType="java.lang.Integer" parameterType="map">
+    select count(1) from mmall_user
+    where username=#{username}
+    and question=#{question}
+    and answer=#{answer}
+  </select>
+  <select id="checkPassword" resultType="java.lang.Integer">
+    select count(1) from mmall_user
+    where  id=#{userId}
+    and password=#{password}
+  </select>
+  <select id="checkEmailByUserId" resultType="java.lang.Integer" parameterType="map">
+    select count(1) from mmall_user
+    where email=#{email}
+    and id!=#{userId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_user
     where id = #{id,jdbcType=INTEGER}
@@ -31,12 +66,12 @@
   <insert id="insert" parameterType="com.mmall.pojo.User" >
     insert into mmall_user (id, username, password, 
       email, phone, question, 
-      answer, role, create_time, 
-      update_time)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      answer, role)
+    values (
+      #{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
-      #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.mmall.pojo.User" >
     insert into mmall_user
@@ -64,12 +99,6 @@
       </if>
       <if test="role != null" >
         role,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -129,12 +158,6 @@
       <if test="role != null" >
         role = #{role,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -150,5 +173,10 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePasswordByUsername" parameterType="map">
+    update mmall_user
+    set password=#{passwordNew}
+    where username=#{username}
   </update>
 </mapper>
