@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+
 
 import javax.servlet.http.HttpSession;
 
@@ -26,10 +26,10 @@ public class UserController {
 
     /**
      *  登录
-     * @param username
-     * @param password
-     * @param session
-     * @return
+     * @param username 用户名
+     * @param password 密码
+     * @param session  时域
+     * @return  返回
      */
     @RequestMapping(value = "login.do",method = RequestMethod.POST )
     @ResponseBody
@@ -54,7 +54,7 @@ public class UserController {
 
     @RequestMapping(value = "register.do",method = RequestMethod.POST )
     @ResponseBody
-    public ServerResponse<User> register(User user){
+    public ServerResponse<String> register(User user){
         return iUserService.register(user);
 
     }
@@ -98,7 +98,7 @@ public class UserController {
     public ServerResponse<String> loginResetPassword(HttpSession session,String passwordOld,String passwordNew){
         User user=(User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
-            ServerResponse.createdByErrorMessage("用户未登录");
+            return ServerResponse.createdByErrorMessage("用户未登录");
         }
         return iUserService.loginResetPassword(user,passwordOld,passwordNew);
     }
@@ -108,7 +108,7 @@ public class UserController {
     public ServerResponse<User> updateUserInformation(HttpSession session,User user){
         User currentUser=(User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
-            ServerResponse.createdByErrorMessage("用户未登录");
+            return ServerResponse.createdByErrorMessage("用户未登录");
         }
         user.setId(currentUser.getId());
         user.setUsername(currentUser.getUsername());

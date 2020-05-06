@@ -1,6 +1,6 @@
 package com.mmall.service.impl;
 
-import com.github.pagehelper.StringUtil;
+
 import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
 import com.mmall.common.TokenCache;
@@ -11,8 +11,6 @@ import com.mmall.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 
@@ -43,7 +41,7 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createdBySuccess("登陆成功",user);
     }
 
-    public ServerResponse<User> register(User user){
+    public ServerResponse<String> register(User user){
         //checkValid方法复用
         ServerResponse validResponse = this.checkValid(user.getUsername(),Const.USERNAME);
         if(!validResponse.isSuccess()){
@@ -85,7 +83,7 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createdBySuccessMessage("校验成功");
     }
 
-    public ServerResponse selectQuestion(String username){
+    public ServerResponse<String> selectQuestion(String username){
         //checkValid方法复用
         ServerResponse validResponse = this.checkValid(username,Const.USERNAME);
         if(validResponse.isSuccess()){
@@ -98,7 +96,7 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createdByErrorMessage("找回密码问题为空");
     }
 
-    public ServerResponse checkAnswer(String username,String question,String answer){
+    public ServerResponse<String> checkAnswer(String username,String question,String answer){
         int resultCount =userMapper.checkAnswer(username,question,answer);
         if(resultCount > 0) {
             String forgetToken = UUID.randomUUID().toString();
@@ -141,7 +139,7 @@ public class UserServiceImpl implements IUserService {
         }
         user.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
         int updateCount = userMapper.updateByPrimaryKeySelective(user);
-        if(resultCount > 0){
+        if(updateCount > 0){
             return ServerResponse.createdBySuccessMessage("密码更新成功");
         }
         return ServerResponse.createdByErrorMessage("密码更新失败");
@@ -176,6 +174,21 @@ public class UserServiceImpl implements IUserService {
         user.setQuestion(StringUtils.EMPTY);
         user.setAnswer(StringUtils.EMPTY);
         return ServerResponse.createdBySuccess(user);
+    }
+
+
+    //backend
+
+    /**
+     * 校验是否是管理员
+     * @param user 用户
+     * @return 返回
+     */
+    public ServerResponse<String> checkUserAdminRole(User user){
+        if(user != null && user.getRole() ==Const.Role.ROLE_ADMIN){
+            return ServerResponse.createdBySuccess("是管理员");
+        }
+        return ServerResponse.createdByErrorMessage("非管理员或用户不存在");
     }
 
 }

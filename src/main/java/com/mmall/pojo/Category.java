@@ -86,4 +86,25 @@ public class Category {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        return id != null ? id.equals(category.id) : category.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+    /**
+     * 如果两个对象equals返回true，它们的hashcode一定相同
+     * 如果两个对象的Hashcode相同，它们并不一定相同
+     * 也就是说两个对象的hashcode即使一样的话，equals也有可能返回false
+     * 如果要用set集合去处理的话，最好是equals和hash重写，并保证判断因子一样
+     */
 }

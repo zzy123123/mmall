@@ -10,13 +10,13 @@ public interface IUserService {
 
     ServerResponse<User> login(String username, String password);
 
-    ServerResponse<User> register(User user);
+    ServerResponse<String> register(User user);
 
     ServerResponse<String> checkValid(String str,String type);
 
-    ServerResponse selectQuestion(String username);
+    ServerResponse<String> selectQuestion(String username);
 
-    ServerResponse checkAnswer(String username,String question,String answer);
+    ServerResponse<String> checkAnswer(String username,String question,String answer);
 
     ServerResponse<String> forgetResetPassword(String username,String passwordNew,String forgetToken);
 
@@ -25,4 +25,6 @@ public interface IUserService {
     ServerResponse<User> updateUserInformation(User user);
 
     ServerResponse<User> getUserInformation(Integer userId);
+
+    ServerResponse<String> checkUserAdminRole(User user);
 }
