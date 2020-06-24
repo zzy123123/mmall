@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements ICategoryService {
      * @param categoryId
      * @return
      */
-    public ServerResponse selectChildCategoryByRecursion(Integer categoryId){
+    public ServerResponse<List<Integer>> selectCategoryAndChildCategoryByRecursion(Integer categoryId){
         Set<Category> categorySet = Sets.newHashSet();
         findChildCategoryByRecursion(categorySet,categoryId);
         List<Integer> categoryIdList= Lists.newArrayList();

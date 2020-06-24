@@ -23,6 +23,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserMapper userMapper;
 
+    //portal
     @Override
     public ServerResponse<User> login(String username, String password) {
         int resultCount = userMapper.checkUserName(username);

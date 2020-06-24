@@ -29,7 +29,7 @@ import java.util.Map;
  * Created By Zzyy
  **/
 @Controller
-@RequestMapping("/manage/product")
+@RequestMapping("/manage/product/")
 public class ProductManageController {
 
     @Autowired

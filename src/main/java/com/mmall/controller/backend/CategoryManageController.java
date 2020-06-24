@@ -81,7 +81,7 @@ public class CategoryManageController {
             return ServerResponse.createdByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
         }
         if(iUserService.checkUserAdminRole(user).isSuccess()){
-            return iCategoryService.selectChildCategoryByRecursion(categoryId);
+            return iCategoryService.selectCategoryAndChildCategoryByRecursion(categoryId);
         }else{
             return ServerResponse.createdByErrorMessage("无权限操作，需要Admin权限");
         }
