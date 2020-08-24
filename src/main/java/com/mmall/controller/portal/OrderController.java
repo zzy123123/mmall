@@ -85,7 +85,7 @@ public class OrderController {
             return Const.AliPayCallBack.RESPONSE_FAILED;
     }
 
-    @RequestMapping(value = "query_order_pay_status.do",method = RequestMethod.POST)
+    @RequestMapping(value = "query_order_pay_status.do")
     @ResponseBody
     public ServerResponse<Boolean> queryOrderPayStatus(HttpSession session, Long orderNumber){
         User user=(User)session.getAttribute(Const.CURRENT_USER);
