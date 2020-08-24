@@ -29,8 +29,8 @@ public class DateTimeUtil {
         return dateTime.toString(STAND_FORMAT);
     }
 
-//    public static void main(String[] args) {
-//        System.out.println(DateTimeUtil.dateToStr(new Date(),STAND_FORMAT));
-//        System.out.println(DateTimeUtil.strToDate("2020-04-03 17:47:00",STAND_FORMAT));
-//    }
+    public static void main(String[] args) {
+        System.out.println(DateTimeUtil.dateToStr(new Date()));
+        System.out.println(DateTimeUtil.strToDate("2020-04-03 17:47:00"));
+    }
 }
