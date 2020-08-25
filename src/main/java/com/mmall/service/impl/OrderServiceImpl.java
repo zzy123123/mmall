@@ -34,9 +34,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created By Zzyy
@@ -193,18 +191,25 @@ public class OrderServiceImpl implements IOrderService {
         String tradeNumber = params.get("trade_no");
         String tradeStatus = params.get("trade_status");
         Order order = orderMapper.selectByOrderNumber(orderNumber);
-        BigDecimal totalMount = new BigDecimal(params.get("total_amount"));
+        BigDecimal payment = order.getPayment();
+        BigDecimal total_amount = new BigDecimal(params.get("total_amount"));
         if(order == null){//商户需要验证该通知数据中的 out_trade_no 是否为商户系统中创建的订单号；
+            logger.error("非本商城订单，回调忽略");
             return ServerResponse.createdByErrorMessage("非本商城订单，回调忽略");
-        } else if(order.getPayment() !=  totalMount){//判断 total_amount 是否确实为该订单的实际金额（即商户订单创建时的金额）；
-            return ServerResponse.createdByErrorMessage("回调金额与订单内金额对应不上，回调忽略");
+        }else if(payment.compareTo(total_amount) != 0){//判断 total_amount 是否确实为该订单的实际金额（即商户订单创建时的金额）；
+            logger.error("回调金额与订单金额不符，回调忽略");
+            return ServerResponse.createdByErrorMessage("回调金额与订单金额不符，回调忽略");
         }
         //todo 校验通知中的 seller_id（或者seller_email) 是否为 out_trade_no 这笔单据的对应的操作方（有的时候，一个商户可能有多个 seller_id/seller_email）
         if(order.getStatus() >= Const.OrderStatusEnum.PAID.getCode()){
             return ServerResponse.createdBySuccess("支付宝重复调用, 回调忽略");
         }
         if(Const.AliPayCallBack.TRADE_STATUS_TRADE_SUCCESS.equals(tradeStatus)){
-            order.setPaymentTime(DateTimeUtil.strToDate(params.get("gmt_payment")));
+            Date date = DateTimeUtil.strToDate(params.get("gmt_payment"));
+            Calendar ca=Calendar.getInstance();
+            ca.setTime(date);
+            ca.add(Calendar.HOUR_OF_DAY, 8);
+            order.setPaymentTime(ca.getTime());
             order.setStatus(Const.OrderStatusEnum.PAID.getCode());//订单状态设为已支付
             orderMapper.updateByPrimaryKeySelective(order);//更新订单状态
         }

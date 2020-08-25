@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -30,7 +31,13 @@ public class DateTimeUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(DateTimeUtil.dateToStr(new Date()));
+        Date date =new Date();
+        System.out.println(DateTimeUtil.dateToStr(date));
+        Calendar ca=Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(Calendar.HOUR_OF_DAY, 8);
+
+        System.out.println(DateTimeUtil.dateToStr(ca.getTime()));
         System.out.println(DateTimeUtil.strToDate("2020-04-03 17:47:00"));
     }
 }
