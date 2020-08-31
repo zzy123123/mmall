@@ -39,5 +39,8 @@ public class DateTimeUtil {
 
         System.out.println(DateTimeUtil.dateToStr(ca.getTime()));
         System.out.println(DateTimeUtil.strToDate("2020-04-03 17:47:00"));
+
+        long currentTime = System.currentTimeMillis();
+        System.out.println(currentTime + currentTime%10);
     }
 }

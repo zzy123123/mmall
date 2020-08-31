@@ -56,7 +56,7 @@ public class CartController {
 
     @RequestMapping("list.do")
     @ResponseBody
-    public ServerResponse<CartVo> selectCart(HttpSession session  ){
+    public ServerResponse<CartVo> selectCart(HttpSession session){
         User user=(User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
             return ServerResponse.createdByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");

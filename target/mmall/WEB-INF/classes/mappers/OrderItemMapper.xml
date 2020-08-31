@@ -33,6 +33,12 @@
         where user_id = #{userId,jdbcType=INTEGER}
         and order_no = #{orderNumber,jdbcType=BIGINT}
     </select>
+    <select id="getByOrderNumber" parameterType="Long" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List"></include>
+      from mmall_order_item
+      where order_no = #{orderNumber,jdbcType=BIGINT}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_order_item
     where id = #{id,jdbcType=INTEGER}
@@ -40,12 +46,10 @@
   <insert id="insert" parameterType="com.mmall.pojo.OrderItem" >
     insert into mmall_order_item (id, user_id, order_no, 
       product_id, product_name, product_image, 
-      current_unit_price, quantity, total_price, 
-      create_time, update_time)
+      current_unit_price, quantity, total_price)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderNo,jdbcType=BIGINT}, 
       #{productId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productImage,jdbcType=VARCHAR}, 
-      #{currentUnitPrice,jdbcType=DECIMAL}, #{quantity,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{currentUnitPrice,jdbcType=DECIMAL}, #{quantity,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.mmall.pojo.OrderItem" >
     insert into mmall_order_item
@@ -77,12 +81,6 @@
       <if test="totalPrice != null" >
         total_price,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -112,15 +110,22 @@
       <if test="totalPrice != null" >
         #{totalPrice,jdbcType=DECIMAL},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.mmall.pojo.OrderItem" >
+    <insert id="batchInsert" parameterType="List">
+    insert into mmall_order_item (id, user_id, order_no,
+      product_id, product_name, product_image,
+      current_unit_price, quantity, total_price)
+    values
+    <foreach collection="orderItemList" index="index" item="item" separator=",">
+      (
+      #{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.orderNo,jdbcType=BIGINT},
+      #{item.productId,jdbcType=INTEGER}, #{item.productName,jdbcType=VARCHAR}, #{item.productImage,jdbcType=VARCHAR},
+      #{item.currentUnitPrice,jdbcType=DECIMAL}, #{item.quantity,jdbcType=INTEGER}, #{item.totalPrice,jdbcType=DECIMAL}
+      )
+    </foreach>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.mmall.pojo.OrderItem" >
     update mmall_order_item
     <set >
       <if test="userId != null" >
@@ -147,12 +152,6 @@
       <if test="totalPrice != null" >
         total_price = #{totalPrice,jdbcType=DECIMAL},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -165,9 +164,7 @@
       product_image = #{productImage,jdbcType=VARCHAR},
       current_unit_price = #{currentUnitPrice,jdbcType=DECIMAL},
       quantity = #{quantity,jdbcType=INTEGER},
-      total_price = #{totalPrice,jdbcType=DECIMAL},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      total_price = #{totalPrice,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

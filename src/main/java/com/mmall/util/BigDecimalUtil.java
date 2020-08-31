@@ -47,6 +47,11 @@ public class BigDecimalUtil {
         BigDecimal totalMount5 = new BigDecimal("3299.00");
         BigDecimal totalMount6 = new BigDecimal("3299.00");
         System.out.println(totalMount5 == totalMount6);
+
+
+        BigDecimal sum = BigDecimalUtil.add(totalMount5.doubleValue(),totalMount6.doubleValue());
+        System.out.println(sum);
+
     }
 }
 
